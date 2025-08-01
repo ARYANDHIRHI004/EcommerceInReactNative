@@ -2,8 +2,9 @@ import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken"
 import { ACCESS_TOKEN_EXPIRY, ACCESS_TOKEN_SECRET, REFRESH_TOKEN_EXPIRY, REFRESH_TOKEN_SECRET } from "../constents.js";
+import crypto from "crypto"
 
-const userScheme = mongoose.Schema({
+const userScheme = new mongoose.Schema({
     name:{
         type:String,
         requires:true,
