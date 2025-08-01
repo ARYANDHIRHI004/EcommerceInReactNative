@@ -9,6 +9,7 @@ const shopSchema = new mongoose.Schema({
         Type:mongoose.Types.ObjectId,
         ref:"User"
     },
+    
 
 },{timestamps:true})
 

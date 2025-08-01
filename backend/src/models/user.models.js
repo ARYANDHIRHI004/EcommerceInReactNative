@@ -4,8 +4,8 @@ import jwt from "jsonwebtoken"
 import { ACCESS_TOKEN_EXPIRY, ACCESS_TOKEN_SECRET, REFRESH_TOKEN_EXPIRY, REFRESH_TOKEN_SECRET } from "../constents.js";
 import crypto from "crypto"
 
-const userScheme = new mongoose.Schema({
-    name:{
+const userSchema = new mongoose.Schema({
+    fullname:{
         type:String,
         requires:true,
     },
@@ -62,19 +62,19 @@ const userScheme = new mongoose.Schema({
 
 }, {timestamps:true})
 
-userScheme.pre('save', async function(next){
+userSchema.pre('save', async function(next){
     if(this.isModified('password')){
         this.password = await bcrypt.hash(this.password, 10)
         next()
     }   
 })
 
-userScheme.methods.comparePassword = async function(password){
+userSchema.methods.comparePassword = async function(password){
     const isMatched = await bcrypt.compare(password, this.password)
     return isMatched
 }
 
-userScheme.methods.generateAccessToken = function(){
+userSchema.methods.generateAccessToken = function(){
     return jwt.sign({
         id:this.id,
         username:this.username,
@@ -86,7 +86,7 @@ userScheme.methods.generateAccessToken = function(){
     }
 )}
 
-userScheme.methods.generateREfreshToken = function(){
+userSchema.methods.generateREfreshToken = function(){
     return jwt.sign({
         id:this.id,
     },
@@ -106,4 +106,4 @@ userSchema.methods.generateTemproryToken = function(){
     return {unHashedToken, hashedToken, tokenExpiry}
 }
 
-export const User = mongoose.model('User', userScheme) 
+export const User = mongoose.model('User', userSchema) 
