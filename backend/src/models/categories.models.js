@@ -3,19 +3,19 @@ import mongoose from "mongoose";
 const categorySchema = new mongoose.Schema(
   {
     categoryName: {
-      Type: String,
+      type: String,
       required: true,
     },
     description: {
-      Type: String,
+      type: String,
       required: true,
     },
     owner: {
-      Type: mongoose.Types.ObjectId,
+      type: mongoose.Types.ObjectId,
       ref: "User",
     },
     shop: {
-      Type: mongoose.Types.ObjectId,
+      type: mongoose.Types.ObjectId,
       ref: "Shop",
     },
     

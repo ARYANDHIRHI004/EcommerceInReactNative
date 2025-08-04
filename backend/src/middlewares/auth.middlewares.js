@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 
 export const verifyJWT = asyncHandler(async (req, res, next) => {
   try {
-    const accessToken = req.cookies?.accessToken;
+    const accessToken = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer", "") ;
 
     if (!accessToken) {
       throw new ApiError(401, "Invalid Token");

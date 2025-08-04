@@ -2,11 +2,11 @@ import mongoose from "mongoose";
 
 const shopSchema = new mongoose.Schema({
     shopName:{
-        Type:String,
+        type:String,
         required:true,
     },
     owner:{
-        Type:mongoose.Types.ObjectId,
+        type:mongoose.Types.ObjectId,
         ref:"User"
     },
     

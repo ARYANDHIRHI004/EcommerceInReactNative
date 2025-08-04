@@ -103,7 +103,13 @@ export const loginUser = asyncHandler(async (req, res) => {
     .status(200)
     .cookie("accessToken", accesstoken, options)
     .cookie("refreshToken", refreshToken, options)
-    .json(new ApiResponse(201, user, "User LoggedIn successfully"));
+    .json(
+      new ApiResponse(
+        201,
+        { user, accesstoken, refreshToken },
+        "User LoggedIn successfully",
+      ),
+    );
 });
 
 export const logoutUser = asyncHandler(async (req, res) => {
@@ -113,7 +119,17 @@ export const logoutUser = asyncHandler(async (req, res) => {
     throw new ApiError(402, "Unauthorized Request");
   }
 
-  const user = await User.findById(userId);
+  const user = await User.findByIdAndUpdate(
+    userId,
+    {
+      $set: {
+        refreshToken: undefined,
+      },
+    },
+    {
+      new: true,
+    },
+  );
 
   if (!user) {
     throw new ApiError(401, "user does not exist");
@@ -127,26 +143,31 @@ export const logoutUser = asyncHandler(async (req, res) => {
     .status(200)
     .clearCookie("accessToken", options)
     .clearCookie("refreshToken", options)
-    .json(new ApiResponse(201, "User LoggedOut successfully"));
+    .json(new ApiResponse(201, {}, "User LoggedOut successfully"));
 });
 
-
 export const getCurrentUser = asyncHandler(async (req, res) => {
-    const userId = req.user
+  const userId = req.user;
 
-    if(!userId){
-        throw new ApiError(401, "Unauthorized Request")
-    }
+  if (!userId) {
+    throw new ApiError(401, "Unauthorized Request");
+  }
 
-    const user = await User.findById(userId)
+  const user = await User.findById(userId);
 
-    if(!user){
-        throw new ApiError(401,"User does not exist")
-    }
+  if (!user) {
+    throw new ApiError(401, "User does not exist");
+  }
 
-    return res.status(200)
-        .json(
-            new ApiResponse(201, user, "Current user")
-        )
+  return res.status(200).json(new ApiResponse(201, user, "Current user"));
+});
 
-})
+export const refresAccessToken = asyncHandler();
+
+export const resetPasswordToken = asyncHandler();
+
+export const resetPassword = asyncHandler();
+
+export const changePassword = asyncHandler();
+
+export const googleLogin = asyncHandler();
